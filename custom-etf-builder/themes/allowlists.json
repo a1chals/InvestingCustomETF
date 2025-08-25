@@ -1,0 +1,24 @@
+{
+  "cybersecurity": {
+    "stocks": ["PANW","CRWD","ZS","FTNT","OKTA"],
+    "etfs": ["HACK","CIBR"],
+    "per_name_cap_hint": "<= single-name cap from policy"
+  },
+  "glp1_obesity": {
+    "stocks": ["LLY","NVO","PFE","MNMD"],
+    "etfs": ["XHE","IHI"],
+    "note": "example list; refine later"
+  },
+  "evs": {
+    "stocks": ["TSLA","ALB","ON","GM","F"],
+    "etfs": ["DRIV","LIT"]
+  },
+  "semiconductors": {
+    "stocks": ["NVDA","AVGO","ASML","AMD","TSM"],
+    "etfs": ["SMH","SOXX"]
+  },
+  "clean_energy": {
+    "stocks": ["ENPH","FSLR","NEE"],
+    "etfs": ["ICLN","TAN"]
+  }
+} 
