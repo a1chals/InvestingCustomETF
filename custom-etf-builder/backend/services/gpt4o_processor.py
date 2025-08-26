@@ -63,7 +63,7 @@ SYSTEM_PROMPT = (
     "{\n"
     "  \"as_of\": \"YYYY-MM-DD\",\n"
     "  \"risk_level\": \"low|medium|high\",\n"
-    "  \"themes_detected\": [\"theme1\",\"theme2\"],\n"
+    "  \"themes_detected\": [{\"theme\": \"theme_name\", \"confidence\": 0.9, \"evidence\": [\"supporting_text\"]}],\n"
     "  \"sentiment\": \"positive|negative|neutral\",\n"
     "  \"anchor_growth_targets\": { \"anchor\": 0.00, \"growth\": 0.00 },\n"
     "  \"portfolio_allocations\": [\n"
@@ -114,7 +114,7 @@ class GPT4oProcessor:
         content = resp.choices[0].message.content
 
         # Strip markdown code fences if present
-        if isinstance(content, str) and content.startswith('```'):
+        if content.startswith('```'):
             fence = '```json'
             if content.startswith(fence):
                 content = content[len(fence):]
