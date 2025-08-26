@@ -1,5 +1,9 @@
 import os
+<<<<<<< HEAD:InvestingCustomETF/custom-etf-builder/backend/services/gpt4o_processor.py
 from typing import Dict, Any, List, Optional
+=======
+from typing import Dict, Any, List
+>>>>>>> 6c3b6cf7abe6754e34c63367c6e1e26ab64817d6:custom-etf-builder/backend/services/gpt4o_processor.py
 
 from openai import AsyncOpenAI
 
@@ -22,7 +26,11 @@ SYSTEM_PROMPT = (
 
 
 class GPT4oProcessor:
+<<<<<<< HEAD:InvestingCustomETF/custom-etf-builder/backend/services/gpt4o_processor.py
     def __init__(self, api_key: Optional[str] = None, model: str = 'gpt-4o-mini') -> None:
+=======
+    def __init__(self, api_key: str | None = None, model: str = 'gpt-4o-mini') -> None:
+>>>>>>> 6c3b6cf7abe6754e34c63367c6e1e26ab64817d6:custom-etf-builder/backend/services/gpt4o_processor.py
         self.client = AsyncOpenAI(api_key=api_key or OPENAI_API_KEY)
         self.model = model
 

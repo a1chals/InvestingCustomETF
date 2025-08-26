@@ -1,1 +1,9 @@
+<<<<<<< HEAD
 .env.local
+=======
+.venv/
+__pycache__/
+*.pyc
+.env.local
+node_modules/
+>>>>>>> 6c3b6cf7abe6754e34c63367c6e1e26ab64817d6

@@ -3,4 +3,7 @@ uvicorn[standard]==0.30.1
 httpx==0.27.0
 pydantic==2.9.2
 openai==1.42.0
+<<<<<<< HEAD:InvestingCustomETF/custom-etf-builder/backend/requirements.txt
 python-dotenv==1.0.0
+=======
+>>>>>>> 6c3b6cf7abe6754e34c63367c6e1e26ab64817d6:custom-etf-builder/backend/requirements.txt
