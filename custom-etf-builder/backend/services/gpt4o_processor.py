@@ -4,6 +4,7 @@ from typing import Dict, Any, List
 from openai import AsyncOpenAI
 
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', '')
+DEBUG_AI = os.getenv('DEBUG_AI', '') == '1'
 
 SYSTEM_PROMPT = (
     "You are the portfolio weights composer. You receive:\n"
@@ -99,10 +100,64 @@ class GPT4oProcessor:
             { 'role': 'system', 'content': SYSTEM_PROMPT },
             { 'role': 'user', 'content': f'User text: {user_text}\nRisk: {risk}\nAmount: {amount}\nMarket data (JSON): {market_data}\nReturn ONLY JSON.' }
         ]
+
+        # Debug: log sizes of incoming market data
+        if DEBUG_AI:
+            try:
+                import json as _json
+                md_str = _json.dumps(market_data)
+                print(f"[GPT4o] companies_in={len(market_data.get('companies', [])) if isinstance(market_data, dict) else 0}, market_data_len={len(md_str)}")
+            except Exception:
+                pass
+
         resp = await self.client.chat.completions.create(model=self.model, messages=messages, temperature=0.2, max_tokens=2000)
         content = resp.choices[0].message.content
+
+        # Strip markdown code fences if present
+        if isinstance(content, str) and content.startswith('```'):
+            fence = '```json'
+            if content.startswith(fence):
+                content = content[len(fence):]
+            elif content.startswith('```'):
+                content = content[3:]
+            if content.endswith('```'):
+                content = content[:-3]
+            content = content.strip()
+
+        # Debug: log usage and finish_reason
+        if DEBUG_AI:
+            try:
+                usage = getattr(resp, 'usage', None)
+                finish = resp.choices[0].finish_reason
+                print(f"[GPT4o] usage={usage}, finish_reason={finish}")
+            except Exception:
+                pass
+
         import json
         try:
-            return json.loads(content)
+            result = json.loads(content)
         except Exception:
+            if DEBUG_AI:
+                try:
+                    print(f"[GPT4o] JSON parse error. content_len={len(content)}")
+                    print(f"[GPT4o] head: {content[:300]}")
+                    print(f"[GPT4o] tail: {content[-300:]}")
+                except Exception:
+                    pass
             return { 'raw_content': content }
+
+        # Debug-only fallback mapping if holdings present instead of portfolio_allocations
+        if DEBUG_AI and isinstance(result, Dict):
+            if not result.get('portfolio_allocations') and isinstance(result.get('holdings'), list):
+                mapped = []
+                for h in result['holdings']:
+                    mapped.append({
+                        'symbol': h.get('symbol'),
+                        'weight': h.get('weight', 0.0),
+                        'kind': h.get('kind', 'stock'),
+                        'rationale': h.get('rationale', '')
+                    })
+                result['portfolio_allocations'] = mapped
+                print(f"[GPT4o] mapped holdings->{len(mapped)} portfolio_allocations")
+
+        return result
