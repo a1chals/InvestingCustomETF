@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sentiment-Driven Portfolio (MVP)</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Sentiment-Driven Stock Portfolio (MVP)</h1>
+
+    <section class="card">
+      <h2>Describe your view</h2>
+      <form id="portfolio-form">
+        <label for="text">Your observation</label>
+        <textarea id="text" placeholder="e.g., I think EV fleets will explode. I see many chargers popping up." required></textarea>
+
+        <div class="row">
+          <div class="col">
+            <label>Risk level</label>
+            <div class="risk-group">
+              <label><input type="radio" name="risk" value="low" /> Low</label>
+              <label><input type="radio" name="risk" value="medium" checked /> Medium</label>
+              <label><input type="radio" name="risk" value="high" /> High</label>
+            </div>
+          </div>
+          <div class="col">
+            <label for="amount">Amount (USD)</label>
+            <input id="amount" type="number" step="1" min="1" value="5000" required />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label for="api-base">Backend URL</label>
+            <input id="api-base" type="text" value="http://localhost:8000" />
+          </div>
+        </div>
+
+        <button type="submit">Generate Portfolio</button>
+      </form>
+      <div id="error" class="error" role="alert" style="display:none"></div>
+    </section>
+
+    <section class="card results" id="results" style="display:none">
+      <h2>Results</h2>
+
+      <div class="row">
+        <div class="col">
+          <canvas id="pie"></canvas>
+        </div>
+        <div class="col">
+          <table id="table">
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Kind</th>
+                <th>Weight %</th>
+                <th>Why</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="explain">
+        <div class="badges" id="constraints"></div>
+        <div class="meta">
+          <div><strong>Risk:</strong> <span id="risk-profile"></span></div>
+          <div><strong>As of:</strong> <span id="as-of"></span></div>
+          <div><strong>Themes:</strong> <span id="themes"></span></div>
+          <div><strong>Sources:</strong> <span id="sources"></span></div>
+        </div>
+        <ul id="rationales"></ul>
+      </div>
+
+      <p class="disclaimer">This tool is for educational purposes only and does not constitute investment advice.</p>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
