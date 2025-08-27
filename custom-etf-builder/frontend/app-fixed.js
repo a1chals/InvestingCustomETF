@@ -242,7 +242,7 @@ generateButton.addEventListener('click', async () => {
     const data = await response.json();
     console.log('Portfolio data received:', data);
     
-    renderResults(data, amount, risk);
+    renderResultsNew(data, amount, risk);
     showInterface(resultsInterface);
     
   } catch (error) {
@@ -310,3 +310,115 @@ document.addEventListener('keydown', (e) => {
     }
   }
 });
+
+// Portfolio name generation
+function generatePortfolioName(userInput, themes) {
+  const trendWords = userInput.toLowerCase();
+  
+  if (trendWords.includes('ai') || trendWords.includes('artificial intelligence') || trendWords.includes('tech')) {
+    return 'AI Innovation Portfolio';
+  } else if (trendWords.includes('green') || trendWords.includes('renewable') || trendWords.includes('clean energy')) {
+    return 'Clean Energy Growth Portfolio';
+  } else if (trendWords.includes('healthcare') || trendWords.includes('medical') || trendWords.includes('pharma')) {
+    return 'Healthcare Future Portfolio';
+  } else if (trendWords.includes('crypto') || trendWords.includes('blockchain') || trendWords.includes('bitcoin')) {
+    return 'Digital Assets Portfolio';
+  } else if (trendWords.includes('dividend') || trendWords.includes('income') || trendWords.includes('stable')) {
+    return 'Dividend Growth Portfolio';
+  } else if (themes && themes.length > 0) {
+    const mainTheme = themes[0];
+    return `${mainTheme} Growth Portfolio`;
+  } else {
+    return 'Custom Growth Portfolio';
+  }
+}
+
+// Holdings list rendering
+function renderHoldingsList(holdings, amount) {
+  const holdingsGrid = document.querySelector('.holdings-grid');
+  if (!holdingsGrid) return;
+  
+  holdingsGrid.innerHTML = '';
+  
+  holdings.forEach(holding => {
+    const dollarAmount = formatCurrency(holding.weight * amount);
+    const weightPercentage = (holding.weight * 100).toFixed(1);
+    
+    const holdingCard = document.createElement('div');
+    holdingCard.className = 'holding-card';
+    holdingCard.innerHTML = `
+      <div class="holding-header">
+        <div class="holding-symbol">${holding.symbol}</div>
+        <div class="holding-stats">
+          <span class="holding-weight">${weightPercentage}%</span>
+          <span class="holding-amount">${dollarAmount}</span>
+        </div>
+      </div>
+      <div class="holding-rationale">${holding.rationale || 'Investment rationale not available'}</div>
+    `;
+    holdingsGrid.appendChild(holdingCard);
+  });
+}
+
+// Theme tags rendering
+function renderThemeTags(themes) {
+  const themeTagsContainer = document.getElementById('theme-tags');
+  if (!themeTagsContainer) return;
+  
+  themeTagsContainer.innerHTML = '';
+  
+  if (Array.isArray(themes) && themes.length > 0) {
+    themes.forEach(theme => {
+      const themeTag = document.createElement('div');
+      themeTag.className = 'theme-chip';
+      const themeText = typeof theme === 'string' ? theme : 
+                      typeof theme === 'object' ? theme.theme : 
+                      String(theme);
+      themeTag.textContent = themeText;
+      themeTagsContainer.appendChild(themeTag);
+    });
+  } else {
+    const defaultTag = document.createElement('div');
+    defaultTag.className = 'theme-chip';
+    defaultTag.textContent = 'Market Analysis';
+    themeTagsContainer.appendChild(defaultTag);
+  }
+}
+
+// Update risk badge styling
+function updateRiskBadge(risk) {
+  const riskElement = document.getElementById('risk-profile');
+  if (!riskElement) return;
+  
+  riskElement.className = `risk-${risk.toLowerCase()}`;
+}
+
+// Updated renderResults function
+function renderResultsNew(data, amount, risk) {
+  // Generate and display portfolio name
+  const portfolioName = generatePortfolioName(data.user_input || '', data.themes_detected || []);
+  const portfolioNameElement = document.getElementById('portfolio-name');
+  if (portfolioNameElement) portfolioNameElement.textContent = portfolioName;
+  
+  // Update meta information
+  const totalAmountElement = document.getElementById('total-amount');
+  if (totalAmountElement) totalAmountElement.textContent = formatCurrency(amount);
+  
+  const riskProfileElement = document.getElementById('risk-profile');
+  if (riskProfileElement) riskProfileElement.textContent = risk.charAt(0).toUpperCase() + risk.slice(1);
+  
+  const asOfElement = document.getElementById('as-of');
+  if (asOfElement) asOfElement.textContent = new Date().toLocaleDateString();
+  
+  // Render pie chart
+  renderPie('pie', data.holdings || [], amount);
+  
+  // Render holdings list
+  renderHoldingsList(data.holdings || [], amount);
+  
+  // Render theme tags
+  renderThemeTags(data.themes_detected || []);
+  
+  // Update risk badge styling
+  updateRiskBadge(risk);
+}
