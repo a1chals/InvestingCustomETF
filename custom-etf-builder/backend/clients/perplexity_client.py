@@ -1,5 +1,5 @@
 import os
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 import httpx
 import json
 
@@ -9,7 +9,7 @@ DEBUG_AI = os.getenv('DEBUG_AI', '') == '1'
 
 
 class PerplexityClient:
-    def __init__(self, api_key: str | None = None, base_url: str | None = None, timeout_seconds: int = 60) -> None:
+    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None, timeout_seconds: int = 60) -> None:
         self.api_key = api_key or PERPLEXITY_API_KEY
         self.base_url = base_url or PERPLEXITY_API_URL
         self.timeout_seconds = timeout_seconds

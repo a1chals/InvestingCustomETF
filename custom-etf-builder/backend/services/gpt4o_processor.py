@@ -1,5 +1,5 @@
 import os
-from typing import Dict, Any, List
+from typing import Dict, Any, Optional, List
 
 from openai import AsyncOpenAI
 
@@ -92,7 +92,7 @@ SYSTEM_PROMPT = (
 
 
 class GPT4oProcessor:
-    def __init__(self, api_key: str | None = None, model: str = 'gpt-4o') -> None:
+    def __init__(self, api_key: Optional[str] = None, model: str = 'gpt-4o') -> None:
         self.client = AsyncOpenAI(api_key=api_key or OPENAI_API_KEY)
         self.model = model
 

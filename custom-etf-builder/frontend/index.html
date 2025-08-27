@@ -3,62 +3,180 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sentiment-Driven Portfolio (MVP)</title>
+  <title>AI Portfolio Builder</title>
   <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="container">
-    <h1>Sentiment-Driven Stock Portfolio (MVP)</h1>
+  <!-- Main Chat Interface -->
+  <div id="main-interface" class="chat-interface">
+    <div class="chat-container">
+      <div class="chat-header">
+        <div class="ai-avatar">
+          <div class="avatar-circle">
+            <span class="ai-icon">🤖</span>
+          </div>
+        </div>
+        <h1 class="main-question">How can I help you grow your money?</h1>
+        <p class="sub-text">Tell me about a trend you're seeing or an investment idea</p>
+      </div>
+      
+      <div class="chat-input-container">
+        <form id="portfolio-form">
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              id="text" 
+              placeholder="I think electric vehicles will explode..." 
+              class="chat-input"
+              required
+            />
+            <button type="submit" class="send-button">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 2L11 13"></path>
+                <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
 
-    <section class="card">
-      <h2>Describe your view</h2>
-      <form id="portfolio-form">
-        <label for="text">Your observation</label>
-        <textarea id="text" placeholder="e.g., I think EV fleets will explode. I see many chargers popping up." required></textarea>
+      <div class="suggestion-chips">
+        <div class="chip" data-text="AI and machine learning companies are growing rapidly">
+          🤖 AI Revolution
+        </div>
+        <div class="chip" data-text="Electric vehicles and clean energy are the future">
+          ⚡ Clean Energy
+        </div>
+        <div class="chip" data-text="Cloud computing and software as a service">
+          ☁️ Cloud Tech
+        </div>
+        <div class="chip" data-text="Biotech and healthcare innovation">
+          🧬 Biotech
+        </div>
+        <div class="chip" data-text="Renewable energy and sustainability">
+          🌱 Green Future
+        </div>
+        <div class="chip" data-text="Fintech and digital payments">
+          💳 FinTech
+        </div>
+      </div>
 
-        <div class="row">
-          <div class="col">
-            <label>Risk level</label>
-            <div class="risk-group">
-              <label><input type="radio" name="risk" value="low" /> Low</label>
-              <label><input type="radio" name="risk" value="medium" checked /> Medium</label>
-              <label><input type="radio" name="risk" value="high" /> High</label>
+      <div class="powered-by">
+        <span>Powered by AI</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Options Selection Interface -->
+  <div id="options-interface" class="options-interface" style="display: none;">
+    <div class="options-container">
+      <div class="back-button" id="back-to-main">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5"></path>
+          <path d="M12 19L5 12L12 5"></path>
+        </svg>
+      </div>
+
+      <div class="user-input-echo">
+        <div class="echo-bubble">
+          <span id="user-input-display"></span>
+        </div>
+      </div>
+
+      <div class="options-section">
+        <h2>Investment Amount</h2>
+        <div class="amount-options">
+          <button class="amount-option" data-amount="1000">$1,000</button>
+          <button class="amount-option" data-amount="5000">$5,000</button>
+          <button class="amount-option" data-amount="10000">$10,000</button>
+          <button class="amount-option" data-amount="25000">$25,000</button>
+          <button class="amount-option custom-amount-btn">Custom</button>
+        </div>
+        <input type="number" id="custom-amount" placeholder="Enter amount" class="custom-input" style="display: none;" min="100" step="100">
+      </div>
+
+      <div class="options-section">
+        <h2>Risk Level</h2>
+        <div class="risk-options">
+          <label class="risk-card">
+            <input type="radio" name="risk" value="low">
+            <div class="risk-content">
+              <div class="risk-icon">🛡️</div>
+              <div class="risk-info">
+                <h3>Conservative</h3>
+                <p>Lower risk, steady growth</p>
+              </div>
             </div>
-          </div>
-          <div class="col">
-            <label for="amount">Amount (USD)</label>
-            <input id="amount" type="number" step="1" min="1" value="5000" required />
-          </div>
+          </label>
+          
+          <label class="risk-card">
+            <input type="radio" name="risk" value="medium" checked>
+            <div class="risk-content">
+              <div class="risk-icon">⚖️</div>
+              <div class="risk-info">
+                <h3>Balanced</h3>
+                <p>Moderate risk, balanced returns</p>
+              </div>
+            </div>
+          </label>
+          
+          <label class="risk-card">
+            <input type="radio" name="risk" value="high">
+            <div class="risk-content">
+              <div class="risk-icon">🚀</div>
+              <div class="risk-info">
+                <h3>Aggressive</h3>
+                <p>Higher risk, growth potential</p>
+              </div>
+            </div>
+          </label>
         </div>
+      </div>
 
-        <div class="row">
-          <div class="col">
-            <label for="api-base">Backend URL</label>
-            <input id="api-base" type="text" value="http://localhost:8000" />
-          </div>
-        </div>
+      <button id="generate-portfolio" class="generate-button">
+        Generate My Portfolio
+      </button>
+    </div>
+  </div>
 
-        <button type="submit">Generate Portfolio</button>
-      </form>
-      <div id="error" class="error" role="alert" style="display:none"></div>
-    </section>
+  <!-- Loading Interface -->
+  <div id="loading-interface" class="loading-interface" style="display: none;">
+    <div class="loading-container">
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+      </div>
+      <h2>Creating your personalized portfolio...</h2>
+      <p>Analyzing market trends and building your investment strategy</p>
+    </div>
+  </div>
 
-    <section class="card results" id="results" style="display:none">
-      <h2>Results</h2>
+  <!-- Results Interface -->
+  <div id="results-interface" class="results-interface" style="display: none;">
+    <div class="results-container">
+      <button id="start-over" class="back-button">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5"></path>
+          <path d="M12 19L5 12L12 5"></path>
+        </svg>
+        Start Over
+      </button>
 
-      <div class="row">
-        <div class="col">
+      <h2>Your Portfolio</h2>
+
+      <div class="results-content">
+        <div class="chart-section">
           <canvas id="pie"></canvas>
         </div>
-        <div class="col">
+        <div class="table-section">
           <table id="table">
             <thead>
               <tr>
                 <th>Symbol</th>
-                <th>Kind</th>
-                <th>Weight %</th>
-                <th>Why</th>
+                <th>Weight</th>
+                <th>Amount</th>
+                <th>Rationale</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -66,21 +184,33 @@
         </div>
       </div>
 
-      <div class="explain">
-        <div class="badges" id="constraints"></div>
-        <div class="meta">
-          <div><strong>Risk:</strong> <span id="risk-profile"></span></div>
-          <div><strong>As of:</strong> <span id="as-of"></span></div>
-          <div><strong>Themes:</strong> <span id="themes"></span></div>
-          <div><strong>Sources:</strong> <span id="sources"></span></div>
+      <div class="portfolio-meta">
+        <div class="meta-item">
+          <strong>Risk:</strong> <span id="risk-profile"></span>
         </div>
-        <ul id="rationales"></ul>
+        <div class="meta-item">
+          <strong>As of:</strong> <span id="as-of"></span>
+        </div>
+        <div class="meta-item">
+          <strong>Themes:</strong> <span id="themes"></span>
+        </div>
       </div>
 
-      <p class="disclaimer">This tool is for educational purposes only and does not constitute investment advice.</p>
-    </section>
+      <div class="disclaimer">
+        This tool is for educational purposes only and does not constitute investment advice.
+      </div>
+    </div>
   </div>
 
-  <script src="main.js"></script>
+  <!-- Error Display -->
+  <div id="error" class="error-display" style="display: none;">
+    <div class="error-content">
+      <h2>Something went wrong</h2>
+      <p id="error-message">Please try again</p>
+      <button id="error-retry" class="retry-button">Try Again</button>
+    </div>
+  </div>
+
+  <script src="main.js?v=1756279363"></script>
 </body>
 </html>
